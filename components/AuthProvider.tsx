@@ -25,16 +25,19 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  // When Supabase is not configured, start as not-loading so the app renders
+  // immediately without triggering a synchronous setState inside the effect.
+  const supabaseConfigured = !!(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+  const [loading, setLoading] = useState(supabaseConfigured)
 
   useEffect(() => {
-    const supabase = createClient()
+    if (!supabaseConfigured) return
 
-    // If Supabase is not configured, skip auth entirely
-    if (!supabase) {
-      setLoading(false)
-      return
-    }
+    const supabase = createClient()
+    if (!supabase) return
 
     // Get the initial session
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
