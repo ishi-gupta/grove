@@ -4,7 +4,8 @@ import { useRef, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
-import { LeafData } from '@/data/dummy'
+import type { LeafData } from '@/lib/types'
+import { getLeafAgeStyle, shiftWarm } from '@/lib/leafAge'
 
 interface Leaf3DProps {
   leaf: LeafData
@@ -40,22 +41,29 @@ export default function Leaf3D({ leaf, position, rotation, branchColor, onClick,
   const baseRotationY = useMemo(() => (seed * 0.7) % (Math.PI * 2), [seed])
   const baseRotationX = useMemo(() => ((seed * 0.3) % 0.6) - 0.3, [seed])
 
-  // Leaf color based on type
+  // Leaf aging — older leaves shift warmer and slightly more translucent
+  const ageStyle = useMemo(() => getLeafAgeStyle(leaf.date), [leaf.date])
+
+  // Leaf color based on type, with aging warmth shift
   const color = useMemo(() => {
-    if (leaf.sealed) return '#8b6914'
-    if (leaf.type === 'gift') return '#9b7cb8'
-    if (leaf.isOwnWriting) return branchColor
-    if (leaf.type === 'bucket') return '#d4a000'
-    return branchColor
-  }, [leaf, branchColor])
+    let base: string
+    if (leaf.sealed) base = '#8b6914'
+    else if (leaf.type === 'gift') base = '#9b7cb8'
+    else if (leaf.isOwnWriting) base = branchColor
+    else if (leaf.type === 'bucket') base = '#d4a000'
+    else base = branchColor
+    return shiftWarm(base, ageStyle.warmthShift)
+  }, [leaf, branchColor, ageStyle.warmthShift])
 
   const emissiveIntensity = useMemo(() => {
-    if (hovered) return 0.8
-    if (leaf.isOwnWriting) return 0.5
-    if (leaf.sealed) return 0.6
-    if (leaf.type === 'gift') return 0.7
-    return 0.3
-  }, [hovered, leaf])
+    let base: number
+    if (hovered) base = 0.8
+    else if (leaf.isOwnWriting) base = 0.5
+    else if (leaf.sealed) base = 0.6
+    else if (leaf.type === 'gift') base = 0.7
+    else base = 0.3
+    return base + ageStyle.emissiveBoost
+  }, [hovered, leaf, ageStyle.emissiveBoost])
 
   const geometry = useMemo(() => new THREE.ShapeGeometry(leafShape, 8), [])
 
@@ -64,17 +72,17 @@ export default function Leaf3D({ leaf, position, rotation, branchColor, onClick,
     emissive: color,
     emissiveIntensity,
     transparent: true,
-    opacity: dimmed ? 0.15 : hovered ? 0.95 : 0.75,
+    opacity: (dimmed ? 0.15 : hovered ? 0.95 : 0.75) * ageStyle.opacityMultiplier,
     side: THREE.DoubleSide,
     roughness: 0.7,
-  }), [color, emissiveIntensity, dimmed, hovered])
+  }), [color, emissiveIntensity, dimmed, hovered, ageStyle.opacityMultiplier])
 
   // Gentle breathing animation
   useFrame((state) => {
     if (!meshRef.current) return
     const t = state.clock.elapsedTime
     const breathe = Math.sin(t * 0.5 + seed * 0.1) * 0.02
-    meshRef.current.scale.setScalar(hovered ? 1.4 : 1.0 + breathe)
+    meshRef.current.scale.setScalar((hovered ? 1.4 : 1.0 + breathe) * ageStyle.scaleMultiplier)
   })
 
   const truncated = leaf.content.slice(0, 22)

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Lock } from 'lucide-react'
-import { LeafData } from '@/data/dummy'
+import type { LeafData } from '@/lib/types'
 
 interface ExpandedLeafProps {
   leaf: LeafData | null

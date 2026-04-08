@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { BranchData, LeafData } from '@/data/dummy'
+import type { BranchData, LeafData } from '@/lib/types'
 import Leaf3D from './Leaf3D'
 
 interface Branch3DProps {

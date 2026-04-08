@@ -2,7 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
-import { LeafData } from '@/data/dummy'
+import type { LeafData } from '@/lib/types'
+import { useBranches, useNightlyLogs, useSeedSuggestions, useRandomOwnWritingLeaf, useTreeAge } from '@/lib/data'
 import ExpandedLeaf from '@/components/ExpandedLeaf'
 import Navigation from '@/components/Navigation'
 import RootOpening from '@/components/RootOpening'
@@ -20,6 +21,14 @@ export default function Page() {
   const [appState, setAppState] = useState<AppState>('explore')
   const [selectedLeaf, setSelectedLeaf] = useState<LeafData | null>(null)
   const [highlightedBranch, setHighlightedBranch] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'tree' | 'constellation'>('tree')
+
+  // Data layer — falls back to dummy data when Supabase is not configured
+  const { branches } = useBranches()
+  const { logs } = useNightlyLogs()
+  const suggestions = useSeedSuggestions()
+  const arrivalQuote = useRandomOwnWritingLeaf(branches)
+  const treeDays = useTreeAge(branches)
 
   const handleLeafClick = useCallback((leaf: LeafData) => {
     setSelectedLeaf(leaf)
@@ -41,15 +50,25 @@ export default function Page() {
     console.log('Fed to tree:', content)
   }
 
+  const handleToggleView = useCallback(() => {
+    setViewMode((m) => (m === 'tree' ? 'constellation' : 'tree'))
+  }, [])
+
   return (
     <main className="relative w-screen h-screen overflow-hidden" style={{ background: '#0a0a14' }}>
 
-      {/* Arrival veil */}
-      {!arrived && <ArrivalVeil onComplete={() => setArrived(true)} />}
+      {/* Arrival veil — shows a random piece of your own writing */}
+      {!arrived && <ArrivalVeil quote={arrivalQuote} onComplete={() => setArrived(true)} />}
 
       {/* 3D Canvas */}
       <div className="absolute inset-0">
-        <Scene onLeafClick={handleLeafClick} highlightedBranch={highlightedBranch} />
+        <Scene
+          branches={branches}
+          treeDays={treeDays}
+          onLeafClick={handleLeafClick}
+          highlightedBranch={highlightedBranch}
+          viewMode={viewMode}
+        />
       </div>
 
       {/* Deterministic ambient particles — no Math.random in render */}
@@ -84,17 +103,24 @@ export default function Page() {
 
       <NightlyLog
         isOpen={appState === 'log'}
+        logs={logs}
         onClose={() => setAppState('explore')}
       />
 
       <SeedPanel
         isOpen={appState === 'seed'}
+        suggestions={suggestions}
         onClose={() => setAppState('explore')}
       />
 
       {/* Navigation appears after arrival */}
       {arrived && (
-        <Navigation state={appState} onChange={handleStateChange} />
+        <Navigation
+          state={appState}
+          onChange={handleStateChange}
+          viewMode={viewMode}
+          onToggleView={handleToggleView}
+        />
       )}
     </main>
   )
