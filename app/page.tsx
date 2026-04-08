@@ -9,8 +9,10 @@ import RootOpening from '@/components/RootOpening'
 import NightlyLog from '@/components/NightlyLog'
 import SeedPanel from '@/components/SeedPanel'
 import ArrivalVeil from '@/components/ArrivalVeil'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import type { FeedMeta } from '@/components/RootOpening'
 
-// Load 3D scene client-side only — Three.js requires browser APIs
+// Load 3D scene client-side only \u2014 Three.js requires browser APIs
 const Scene = dynamic(() => import('@/components/Scene'), { ssr: false })
 
 type AppState = 'explore' | 'feed' | 'log' | 'seed'
@@ -36,10 +38,58 @@ export default function Page() {
     if (state !== 'explore') setSelectedLeaf(null)
   }
 
-  const handleFeedSubmit = (content: string) => {
-    // Phase 2: send to Gardener API
-    console.log('Fed to tree:', content)
-  }
+  const handleFeedSubmit = useCallback(async (content: string, meta?: FeedMeta) => {
+    if (!isSupabaseConfigured()) {
+      console.log('Fed to tree (demo mode):', content, meta)
+      return
+    }
+
+    try {
+      // Step 1: Classify the content into a branch
+      const classifyRes = await fetch('/api/classify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }),
+      })
+      const { branch_id } = await classifyRes.json()
+
+      // Step 2: Create the leaf
+      if (meta?.file) {
+        // File upload (image, audio, camera)
+        const formData = new FormData()
+        formData.append('file', meta.file)
+        formData.append('content', content)
+        formData.append('branch_id', branch_id)
+
+        const res = await fetch('/api/leaves/upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!res.ok) {
+          console.error('Failed to upload leaf:', await res.text())
+        }
+      } else {
+        // Text or URL leaf
+        const res = await fetch('/api/leaves', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content,
+            type: meta?.type === 'url' ? 'text' : 'text',
+            branch_id,
+            is_own_writing: true,
+          }),
+        })
+
+        if (!res.ok) {
+          console.error('Failed to create leaf:', await res.text())
+        }
+      }
+    } catch (err) {
+      console.error('Error feeding tree:', err)
+    }
+  }, [])
 
   return (
     <main className="relative w-screen h-screen overflow-hidden" style={{ background: '#0a0a14' }}>
@@ -52,7 +102,7 @@ export default function Page() {
         <Scene onLeafClick={handleLeafClick} highlightedBranch={highlightedBranch} />
       </div>
 
-      {/* Deterministic ambient particles — no Math.random in render */}
+      {/* Deterministic ambient particles */}
       <div className="fixed inset-0 pointer-events-none z-10">
         {Array.from({ length: 25 }).map((_, i) => {
           const s = i * 137.508

@@ -2,13 +2,51 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import { branches as dummyBranches } from '@/data/dummy'
 
 interface ArrivalVeilProps {
   onComplete: () => void
 }
 
+// Pick a deterministic-per-day random own-writing leaf from dummy data
+function getDummyQuote(): string {
+  const ownWriting = dummyBranches
+    .flatMap((b) => b.leaves)
+    .filter((l) => l.isOwnWriting && !l.sealed)
+
+  if (ownWriting.length === 0) return 'the tree is growing.'
+
+  const d = new Date()
+  const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()
+  return ownWriting[seed % ownWriting.length].content
+}
+
 export default function ArrivalVeil({ onComplete }: ArrivalVeilProps) {
   const [stage, setStage] = useState<'dark' | 'leaf' | 'waveform' | 'done'>('dark')
+  const [quote, setQuote] = useState<string>('')
+
+  useEffect(() => {
+    // Fetch a random own-writing leaf for the arrival quote
+    async function loadQuote() {
+      if (isSupabaseConfigured()) {
+        try {
+          const res = await fetch('/api/leaves?own_writing=true&random=true')
+          if (res.ok) {
+            const data = await res.json()
+            if (data.leaf?.content) {
+              setQuote(data.leaf.content)
+              return
+            }
+          }
+        } catch {
+          // fall through to dummy
+        }
+      }
+      setQuote(getDummyQuote())
+    }
+    loadQuote()
+  }, [])
 
   useEffect(() => {
     const t1 = setTimeout(() => setStage('leaf'), 600)
@@ -31,7 +69,7 @@ export default function ArrivalVeil({ onComplete }: ArrivalVeilProps) {
         >
           {/* The opening leaf / line */}
           <AnimatePresence>
-            {(stage === 'leaf' || stage === 'waveform') && (
+            {(stage === 'leaf' || stage === 'waveform') && quote && (
               <motion.div
                 className="text-center px-12"
                 initial={{ opacity: 0, y: 12 }}
@@ -46,7 +84,7 @@ export default function ArrivalVeil({ onComplete }: ArrivalVeilProps) {
                   lineHeight: 1.7,
                   maxWidth: '380px',
                 }}>
-                  I will take shitty feeling every day rather than not feeling at all.
+                  {quote}
                 </p>
               </motion.div>
             )}
