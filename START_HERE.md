@@ -190,14 +190,21 @@ This is the most interesting and most undefined part of the app.
 
 ---
 
-## Decided: product constraints
+## Decided: stack and product constraints
 
 These are settled. Don't re-open them.
 
-- **Single user.** No auth complexity, no multi-tenancy, no sharing mechanics. This is a personal tool.
+### Stack
+- **Frontend:** Next.js 14 (already built) on Vercel — free tier is sufficient
+- **Backend/database:** Supabase — Postgres with row-level security, built-in auth, table editor for inspecting data without writing SQL, storage for future media
+- **Gardener AI:** Claude API (Anthropic credits available)
+- **Hosting:** Vercel free tier
+
+### Product constraints
+- **Multi-user architecture from day one, but personal use initially.** Every table has a `user_id`. Row-level security is on from the start. Auth is wired up (Google OAuth). Only one account exists for now — but when it's ready to open up, it just opens up. No rewrite.
 - **Web only for now.** No mobile app, no native. Desktop web is the primary surface.
-- **Data should be visible and debuggable.** The owner doesn't want to write SQL to inspect their data, but they want a dashboard or UI where they can see what's in the database. Supabase's table editor satisfies this — pick a backend that has a decent data viewer out of the box.
-- **Media types (image, audio) are not a priority.** Text-first. Don't build ingestion pipelines for non-text content yet.
+- **Data should be visible and debuggable.** Supabase's table editor handles this — the owner can see and inspect all data without writing SQL.
+- **Text-first.** Don't build ingestion pipelines for image, audio, or URL content yet. The leaf type field supports them but they're v2.
 - **Branches are fixed for now.** The 10 existing branches are intentional. No UI for creating custom branches in v1.
 
 ---
