@@ -30,6 +30,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const supabase = createClient()
 
+    // If Supabase is not configured, skip auth entirely
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     // Get the initial session
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
       setSession(initialSession)
@@ -51,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     const supabase = createClient()
+    if (!supabase) return
     await supabase.auth.signOut()
   }
 

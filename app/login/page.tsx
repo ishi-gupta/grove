@@ -5,6 +5,10 @@ import { createClient } from '@/lib/supabase/client'
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
     const supabase = createClient()
+    if (!supabase) {
+      console.warn('Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.')
+      return
+    }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
