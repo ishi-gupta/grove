@@ -127,11 +127,11 @@ The 3D tree is a *visualisation* of your life — it works for browsing and wond
 
 **The question:** Is the 3D the product, or is it a beautiful wrapper around what's actually a flat data app? This matters because maintaining Three.js complexity is expensive. If the tree is the soul of the app, that's fine — but be explicit about it and accept the tradeoff.
 
-### 2. Leaf content is all text descriptions — images and audio don't actually exist
+### 2. Leaf content is all text descriptions — images and audio need to actually work
 
-The `type` field has `image`, `audio`, `url` etc. but none of these render differently. An "image" leaf ("India — the light at 5pm in October") is just a string describing a photo. An "audio" leaf ("Tum Se Hi — Jab We Met") is just a song title.
+The `type` field has `image`, `audio`, `url` etc. but none of these render differently yet. An "image" leaf ("India — the light at 5pm in October") is just a string describing a photo. An "audio" leaf ("Tum Se Hi — Jab We Met") is just a song title.
 
-Should this app actually store and render media? That's a very different engineering problem from storing text. If yes, you need: file upload, storage (S3/Cloudflare R2), a media player in ExpandedLeaf, image rendering. If no — and the app is text-first, with media as references — then the type system is misleading and some types (image, audio) should probably be reconsidered.
+This needs to be fixed — media is core to the concept, not optional. What's needed: file upload to Supabase Storage, a media player in ExpandedLeaf for audio, image rendering for photo leaves, URL parsing for links. The `content` field on a leaf will need to become either a text string or a storage URL depending on type. The data model will need updating to support this cleanly.
 
 ### 3. The Arrival Veil hardcodes one specific quote
 
@@ -204,7 +204,7 @@ These are settled. Don't re-open them.
 - **Multi-user architecture from day one, but personal use initially.** Every table has a `user_id`. Row-level security is on from the start. Auth is wired up (Google OAuth). Only one account exists for now — but when it's ready to open up, it just opens up. No rewrite.
 - **Web only for now.** No mobile app, no native. Desktop web is the primary surface.
 - **Data should be visible and debuggable.** Supabase's table editor handles this — the owner can see and inspect all data without writing SQL.
-- **Text-first.** Don't build ingestion pipelines for image, audio, or URL content yet. The leaf type field supports them but they're v2.
+- **Media-first.** Image, audio, and URL ingestion are core, not optional. A leaf that's a photo should show the photo. A leaf that's a song should play it. Supabase Storage handles file uploads. Build the full feed input (text, image, audio, URL) as a first-class priority, not a v2 afterthought.
 - **Branches are fixed for now.** The 10 existing branches are intentional. No UI for creating custom branches in v1.
 
 ---
