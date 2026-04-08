@@ -1,27 +1,103 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
-import { nightlyLogs } from '@/data/dummy'
+import { nightlyLogs as dummyLogs } from '@/data/dummy'
+import { isSupabaseConfigured } from '@/lib/supabase'
 
 interface NightlyLogProps {
   isOpen: boolean
   onClose: () => void
 }
 
+interface LogDot {
+  date: string
+  positive: boolean
+}
+
 export default function NightlyLog({ isOpen, onClose }: NightlyLogProps) {
   const [entry, setEntry] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [streakDots, setStreakDots] = useState<LogDot[]>([])
+  const [isSaving, setIsSaving] = useState(false)
 
-  const handleSubmit = () => {
-    if (!entry.trim()) return
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
-      setEntry('')
-      onClose()
-    }, 1800)
+  // Fetch 7-day streak data
+  const fetchLogs = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setStreakDots(dummyLogs.slice(0, 7).reverse())
+      return
+    }
+
+    try {
+      const res = await fetch('/api/nightly-logs?days=7')
+      if (res.ok) {
+        const data = await res.json()
+        const logs: LogDot[] = (data.logs ?? []).map((l: { date: string; positive: boolean }) => ({
+          date: l.date,
+          positive: l.positive,
+        }))
+
+        // Fill in missing days with empty dots
+        const dots: LogDot[] = []
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date()
+          d.setDate(d.getDate() - i)
+          const dateStr = d.toISOString().split('T')[0]
+          const existing = logs.find((l) => l.date === dateStr)
+          dots.push(existing ?? { date: dateStr, positive: false })
+        }
+        setStreakDots(dots)
+      } else {
+        setStreakDots(dummyLogs.slice(0, 7).reverse())
+      }
+    } catch {
+      setStreakDots(dummyLogs.slice(0, 7).reverse())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchLogs()
+    }
+  }, [isOpen, fetchLogs])
+
+  const handleSubmit = async () => {
+    if (!entry.trim() || isSaving) return
+
+    if (!isSupabaseConfigured()) {
+      setSubmitted(true)
+      setTimeout(() => {
+        setSubmitted(false)
+        setEntry('')
+        onClose()
+      }, 1800)
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const res = await fetch('/api/nightly-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entry: entry.trim() }),
+      })
+
+      if (res.ok) {
+        setSubmitted(true)
+        setTimeout(() => {
+          setSubmitted(false)
+          setEntry('')
+          onClose()
+        }, 1800)
+      } else {
+        console.error('Failed to save nightly log')
+      }
+    } catch (err) {
+      console.error('Error saving nightly log:', err)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -117,14 +193,14 @@ export default function NightlyLog({ isOpen, onClose }: NightlyLogProps) {
                       padding: '8px 0',
                       marginBottom: '20px',
                     }}
-                    placeholder="a conversation, a taste, a moment of effort, something beautiful you noticed…"
+                    placeholder="a conversation, a taste, a moment of effort, something beautiful you noticed\u2026"
                     onFocus={(e) => e.currentTarget.style.borderBottomColor = 'rgba(200, 180, 140, 0.35)'}
                     onBlur={(e) => e.currentTarget.style.borderBottomColor = 'rgba(200, 180, 140, 0.15)'}
                   />
 
                   {/* 7 day dots */}
                   <div className="flex gap-2 items-center mb-6">
-                    {nightlyLogs.slice(0, 7).reverse().map((log, i) => (
+                    {streakDots.map((log, i) => (
                       <div
                         key={i}
                         title={log.date}
@@ -149,21 +225,21 @@ export default function NightlyLog({ isOpen, onClose }: NightlyLogProps) {
 
                   <button
                     onClick={handleSubmit}
-                    disabled={!entry.trim()}
+                    disabled={!entry.trim() || isSaving}
                     className="transition-all"
                     style={{
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '11px',
                       fontWeight: 300,
                       letterSpacing: '0.08em',
-                      color: entry.trim() ? 'rgba(200, 180, 140, 0.7)' : 'rgba(200, 180, 140, 0.2)',
+                      color: entry.trim() && !isSaving ? 'rgba(200, 180, 140, 0.7)' : 'rgba(200, 180, 140, 0.2)',
                       padding: '8px 0',
                       border: 'none',
                       background: 'none',
-                      cursor: entry.trim() ? 'pointer' : 'default',
+                      cursor: entry.trim() && !isSaving ? 'pointer' : 'default',
                     }}
                   >
-                    add to the tree →
+                    {isSaving ? 'saving\u2026' : 'add to the tree \u2192'}
                   </button>
                 </motion.div>
               )}
