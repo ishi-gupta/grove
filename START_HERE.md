@@ -202,4 +202,49 @@ This is the most interesting and most undefined part of the app.
 
 ---
 
+---
+
+## The vision: a Gardener that modifies its own codebase
+
+This is the most important architectural idea in the project and it should shape every decision.
+
+The goal is not just an AI that reads your data and makes suggestions. The goal is a **coding agent that treats Grove's own source code as part of the tree** — something it can tend, grow, and reshape based on what it learns about you.
+
+### What this looks like in practice
+
+1. The Gardener runs on a schedule (nightly, or triggered by activity)
+2. It reads your leaf content, nightly logs, and usage patterns
+3. It identifies something: a recurring theme, a missing feature, a mechanic that would serve you better
+4. It writes the code — new component, new backend route, updated data model, whatever it takes
+5. It opens a GitHub PR with a plain-English description of what it built and why
+6. You review, approve or reject, merge
+
+The tree literally builds itself. The SeedPanel already points at this — it has pre-written Claude prompts for features. Right now you copy-paste them manually. This just closes the loop.
+
+### Why this isn't scary
+
+Everything goes through a PR. Nothing merges without you. Git means nothing is irreversible. The Gardener can be wrong or overreaching — you just close the PR.
+
+The risk isn't "AI modifying code." The risk is a Gardener with no taste — one that adds features compulsively without serving the actual vision. The constraint that keeps it grounded: **the Gardener should only build things that deepen the existing metaphor, not invent a new product.** That constraint should be part of its system prompt.
+
+### What the Gardener needs to be this
+
+- Access to the codebase (read + write files, run the dev server, run tests)
+- Access to your leaf data and nightly logs
+- A system prompt that encodes the vision, the aesthetic rules, and what "in taste" means for Grove
+- Ability to create a git branch, commit, and open a GitHub PR
+- A tool to write back to the SeedPanel (so you can see what it's *considering* before it builds it)
+
+### The system prompt is the soul
+
+The Gardener's system prompt is the most important file in this project — more important than any component. It should contain:
+- What Grove is and what it is not
+- The aesthetic rules (the visual language, the tone, what "in taste" means)
+- The constraint that it serves the user's existing vision, not its own
+- Examples of good and bad Gardener decisions
+
+This document is a first draft of that system prompt. When you're ready to build the Gardener, start here.
+
+---
+
 *The frontend is genuinely beautiful and the concept is coherent. The hardest work — and the most interesting — is still ahead.*
