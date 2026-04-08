@@ -5,14 +5,15 @@ import { OrbitControls, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { Suspense } from 'react'
 import Tree3D from './Tree3D'
-import { LeafData } from '@/data/dummy'
+import { BranchData, LeafData } from '@/data/dummy'
 
 interface SceneProps {
+  branches: BranchData[]
   onLeafClick: (leaf: LeafData) => void
   highlightedBranch: string | null
 }
 
-export default function Scene({ onLeafClick, highlightedBranch }: SceneProps) {
+export default function Scene({ branches, onLeafClick, highlightedBranch }: SceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 3, 9], fov: 55 }}
@@ -33,7 +34,7 @@ export default function Scene({ onLeafClick, highlightedBranch }: SceneProps) {
 
       {/* The tree */}
       <Suspense fallback={null}>
-        <Tree3D onLeafClick={onLeafClick} highlightedBranch={highlightedBranch} />
+        <Tree3D branches={branches} onLeafClick={onLeafClick} highlightedBranch={highlightedBranch} />
       </Suspense>
 
       {/* Camera controls */}
