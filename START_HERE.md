@@ -190,15 +190,15 @@ This is the most interesting and most undefined part of the app.
 
 ---
 
-## Open questions that need answers before building
+## Decided: product constraints
 
-- **Where does data live?** (Supabase, Firebase, local-first with sync, custom backend?)
-- **Is this single-user or multi-user?** (Personal tool vs social/shared?)
-- **What does the Gardener actually do, technically?** (Claude API? embeddings? schedule?)
-- **Are images/audio first-class content, or are they references/descriptions?**
-- **Are branches fixed or user-created?**
-- **What platform is primary?** (Desktop web, mobile web, native app?)
-- **Is there a sharing mechanic?** (Can you share a leaf, a branch, the whole tree?)
+These are settled. Don't re-open them.
+
+- **Single user.** No auth complexity, no multi-tenancy, no sharing mechanics. This is a personal tool.
+- **Web only for now.** No mobile app, no native. Desktop web is the primary surface.
+- **Data should be visible and debuggable.** The owner doesn't want to write SQL to inspect their data, but they want a dashboard or UI where they can see what's in the database. Supabase's table editor satisfies this — pick a backend that has a decent data viewer out of the box.
+- **Media types (image, audio) are not a priority.** Text-first. Don't build ingestion pipelines for non-text content yet.
+- **Branches are fixed for now.** The 10 existing branches are intentional. No UI for creating custom branches in v1.
 
 ---
 
@@ -226,6 +226,29 @@ The tree literally builds itself. The SeedPanel already points at this — it ha
 Everything goes through a PR. Nothing merges without you. Git means nothing is irreversible. The Gardener can be wrong or overreaching — you just close the PR.
 
 The risk isn't "AI modifying code." The risk is a Gardener with no taste — one that adds features compulsively without serving the actual vision. The constraint that keeps it grounded: **the Gardener should only build things that deepen the existing metaphor, not invent a new product.** That constraint should be part of its system prompt.
+
+### The Gardener's cadence — proportional to time
+
+The Gardener doesn't just run nightly. Its ambition scales with how long the tree has been alive. The longer the tree has been growing, the more the Gardener has to work with — and the more boldly it can act.
+
+**Nightly (small)** — reads recent leaves and logs, does quiet maintenance:
+- Resurfaces a leaf you haven't thought about in a while
+- Leaves a gift (a small observation, a connection it noticed)
+- Updates the SeedPanel with 1-2 fresh suggestions
+- Maybe adds a single leaf if something stands out
+
+**Monthly (medium)** — has enough data to see patterns:
+- Proposes or builds a new feature that serves a pattern it detected
+- Might rebalance how leaves are distributed across branches
+- Opens a PR — you review it
+
+**Yearly / multi-year (architectural)** — has seen seasons of your life:
+- Can propose restructuring branches entirely
+- Might suggest that two branches have merged in your life and should merge in the tree
+- Could introduce entirely new mechanics (a vine between branches, a new leaf type)
+- Still opens a PR, but these are bigger, more considered changes
+
+The key principle: **the Gardener's confidence is earned by time.** On day 3 it whispers. After two years it knows you well enough to reshape the structure. This is how a real gardener works.
 
 ### What the Gardener needs to be this
 
