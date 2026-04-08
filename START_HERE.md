@@ -183,15 +183,36 @@ This document is a first draft of that system prompt.
 
 ---
 
+## Decided: the Gardener interaction model
+
+The Gardener doesn't live in a chat panel. It has its own interaction pattern that fits the tree.
+
+### The note
+Occasionally — roughly weekly, or when the Gardener has noticed something worth saying — a small quiet note appears somewhere on the tree. Subtle, not intrusive. Just there. Tapping it takes you to the root.
+
+### The root
+The root is the Gardener's home. Sometimes it's quiet. Sometimes there's something waiting. This is where you meet it.
+
+### The letter
+At the root, the Gardener has written you something. Not a bullet list — a letter. It mixes:
+- An observation ("you've mentioned Lyon eleven times and it's never about anyone else")
+- An insight ("I think you're deciding something")
+- Occasionally a specific question ("you haven't written about your sister since February — is everything okay?")
+
+You can respond at the root, or not. If you respond, that feeds back into the Gardener's portrait of you. The conversation is not saved as a chat history — it's absorbed into context.
+
+### What this is not
+Not a chatbox. Not a search interface. Not always-on. The Gardener speaks when it has something to say.
+
+---
+
 ## Open design questions (not yet decided)
 
-1. **What does the Gardener conversation UI look like?** Is it a chat panel? A floating prompt? Something weirder that fits the tree metaphor? This needs design thought — it shouldn't just be a chatbox.
+1. **How does branch emergence feel to the user?** When the Gardener creates a new branch, does it appear silently on the tree one day? Does it announce itself? Does a new branch grow visually in real time or just appear on next load?
 
-2. **How does branch emergence feel to the user?** When the Gardener creates a new branch, does it appear silently on the tree one day? Does it announce itself? Does a new branch grow visually in real time or just appear on next load?
+2. **How are media leaves rendered in the 3D tree?** Do image leaves look different from text leaves? Does an audio leaf pulse? The visual language for media hasn't been designed.
 
-3. **How are media leaves rendered in the 3D tree?** Do image leaves look different from text leaves? Does an audio leaf pulse? The visual language for media hasn't been designed.
-
-4. **What does the voice memo flow look like?** Tap to record, transcribed by Whisper, shown as a leaf? Or does the audio file itself live on the leaf and play back? Both?
+3. **What does the voice memo flow look like?** Tap to record, transcribed by Whisper, shown as a leaf? Or does the audio file itself live on the leaf and play back? Both?
 
 ---
 
