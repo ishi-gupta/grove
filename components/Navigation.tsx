@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TreePine, Plus, Moon, Sprout, LogOut } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
@@ -21,6 +22,7 @@ const items = [
 
 export default function Navigation({ state, onChange }: NavigationProps) {
   const { user, signOut } = useAuth()
+  const router = useRouter()
   const [showMenu, setShowMenu] = useState(false)
 
   return (
@@ -78,7 +80,7 @@ export default function Navigation({ state, onChange }: NavigationProps) {
                 }}
               >
                 <button
-                  onClick={() => { setShowMenu(false); signOut() }}
+                  onClick={async () => { setShowMenu(false); await signOut(); router.push('/login') }}
                   className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-xs transition-colors cursor-pointer"
                   style={{ color: 'rgba(200, 180, 140, 0.5)' }}
                   onMouseEnter={(e) => {
