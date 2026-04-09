@@ -9,6 +9,7 @@ import RootOpening from '@/components/RootOpening'
 import NightlyLog from '@/components/NightlyLog'
 import SeedPanel from '@/components/SeedPanel'
 import ArrivalVeil from '@/components/ArrivalVeil'
+import { useBranches, useNightlyLogs, useSeedSuggestions, useAddLeaf } from '@/lib/supabase/hooks'
 
 // Load 3D scene client-side only — Three.js requires browser APIs
 const Scene = dynamic(() => import('@/components/Scene'), { ssr: false })
@@ -20,6 +21,12 @@ export default function Page() {
   const [appState, setAppState] = useState<AppState>('explore')
   const [selectedLeaf, setSelectedLeaf] = useState<LeafData | null>(null)
   const [highlightedBranch, setHighlightedBranch] = useState<string | null>(null)
+
+  // Supabase data hooks — fall back to dummy data when not configured
+  const { branches } = useBranches()
+  const { logs, addLog } = useNightlyLogs()
+  const { suggestions } = useSeedSuggestions()
+  const addLeaf = useAddLeaf()
 
   const handleLeafClick = useCallback((leaf: LeafData) => {
     setSelectedLeaf(leaf)
@@ -36,9 +43,8 @@ export default function Page() {
     if (state !== 'explore') setSelectedLeaf(null)
   }
 
-  const handleFeedSubmit = (content: string) => {
-    // Phase 2: send to Gardener API
-    console.log('Fed to tree:', content)
+  const handleFeedSubmit = async (content: string) => {
+    await addLeaf(content, 'text')
   }
 
   return (
@@ -49,7 +55,7 @@ export default function Page() {
 
       {/* 3D Canvas */}
       <div className="absolute inset-0">
-        <Scene onLeafClick={handleLeafClick} highlightedBranch={highlightedBranch} />
+        <Scene branches={branches} onLeafClick={handleLeafClick} highlightedBranch={highlightedBranch} />
       </div>
 
       {/* Deterministic ambient particles — no Math.random in render */}
@@ -85,11 +91,14 @@ export default function Page() {
       <NightlyLog
         isOpen={appState === 'log'}
         onClose={() => setAppState('explore')}
+        logs={logs}
+        onSubmitLog={addLog}
       />
 
       <SeedPanel
         isOpen={appState === 'seed'}
         onClose={() => setAppState('explore')}
+        suggestions={suggestions}
       />
 
       {/* Navigation appears after arrival */}

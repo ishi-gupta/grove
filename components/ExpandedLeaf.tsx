@@ -10,11 +10,11 @@ interface ExpandedLeafProps {
 }
 
 const branchColors: Record<string, string> = {
-  love: '#c17f6b',
+  gratitude: '#c17f6b',
   memory: '#c4935a',
   becoming: '#4ecdc4',
   beauty: '#a78bc4',
-  icons: '#c9a84c',
+  inspiration: '#c9a84c',
   body: '#7a9e6e',
   alive: '#e8a85f',
   words: '#e8d5b7',

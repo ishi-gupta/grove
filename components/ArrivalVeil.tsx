@@ -46,7 +46,7 @@ export default function ArrivalVeil({ onComplete }: ArrivalVeilProps) {
                   lineHeight: 1.7,
                   maxWidth: '380px',
                 }}>
-                  I will take shitty feeling every day rather than not feeling at all.
+                  What would you do today if nothing counted? Answer: exactly this.
                 </p>
               </motion.div>
             )}

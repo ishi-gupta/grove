@@ -2,16 +2,16 @@
 
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { branches } from '@/data/dummy'
-import { LeafData } from '@/data/dummy'
+import { BranchData, LeafData } from '@/data/dummy'
 import Branch3D from './Branch3D'
 
 interface Tree3DProps {
+  branches: BranchData[]
   onLeafClick: (leaf: LeafData) => void
   highlightedBranch: string | null
 }
 
-export default function Tree3D({ onLeafClick, highlightedBranch }: Tree3DProps) {
+export default function Tree3D({ branches, onLeafClick, highlightedBranch }: Tree3DProps) {
   // Trunk geometry — slightly curved upward
   const trunkCurve = useMemo(() => {
     return new THREE.CatmullRomCurve3([

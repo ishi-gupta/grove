@@ -3,11 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Copy, Check, Sprout } from 'lucide-react'
 import { useState } from 'react'
-import { seedSuggestions, SuggestionData } from '@/data/dummy'
+import { SuggestionData } from '@/data/dummy'
 
 interface SeedPanelProps {
   isOpen: boolean
   onClose: () => void
+  suggestions: SuggestionData[]
 }
 
 const complexityColor = {
@@ -99,7 +100,7 @@ function SuggestionCard({ s }: { s: SuggestionData }) {
   )
 }
 
-export default function SeedPanel({ isOpen, onClose }: SeedPanelProps) {
+export default function SeedPanel({ isOpen, onClose, suggestions }: SeedPanelProps) {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -161,7 +162,7 @@ export default function SeedPanel({ isOpen, onClose }: SeedPanelProps) {
               </p>
 
               {/* Suggestions */}
-              {seedSuggestions.map((s) => (
+              {suggestions.map((s) => (
                 <SuggestionCard key={s.id} s={s} />
               ))}
 

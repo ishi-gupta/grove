@@ -34,10 +34,15 @@ export interface SuggestionData {
   status: 'pending' | 'accepted' | 'built' | 'dismissed'
 }
 
+// ---------------------------------------------------------------------------
+// Starter / demo data — generic placeholders so no personal content is shared.
+// Each new user should eventually get their own tree seeded from their inputs.
+// ---------------------------------------------------------------------------
+
 export const branches: BranchData[] = [
   {
-    id: 'love',
-    name: 'Love',
+    id: 'gratitude',
+    name: 'Gratitude',
     color: '#c17f6b',
     attachment: 1.5,
     direction: [-2.5, 2.0, 1.0],
@@ -45,24 +50,24 @@ export const branches: BranchData[] = [
       {
         id: 'l1',
         type: 'own_writing',
-        content: 'I will take shitty feeling every day rather than not feeling at all.',
+        content: 'Feeling grateful for the small things today. A warm cup of tea, a clear sky.',
         date: '2025-06-12',
-        branch: 'love',
+        branch: 'gratitude',
         isOwnWriting: true,
       },
       {
         id: 'l2',
         type: 'text',
-        content: 'She understood desire not as something to be managed, but as proof of being alive. — Simone de Beauvoir',
+        content: 'The only way to do great work is to love what you do. — Steve Jobs',
         date: '2025-11-03',
-        branch: 'love',
+        branch: 'gratitude',
       },
       {
         id: 'l3',
         type: 'capsule',
-        content: 'The piece about the boy I loved.',
+        content: 'A letter to my future self.',
         date: '2025-02-14',
-        branch: 'love',
+        branch: 'gratitude',
         isOwnWriting: true,
         sealed: true,
         sealedUntil: '2028-02-14',
@@ -70,9 +75,9 @@ export const branches: BranchData[] = [
       {
         id: 'l4',
         type: 'audio',
-        content: 'Tum Se Hi — Jab We Met',
+        content: 'Clair de Lune — Debussy',
         date: '2025-12-01',
-        branch: 'love',
+        branch: 'gratitude',
       },
     ],
   },
@@ -86,37 +91,36 @@ export const branches: BranchData[] = [
       {
         id: 'm1',
         type: 'text',
-        content: 'Standing before the terracotta warriors in Xi\'an. The scale of human ambition, preserved in clay.',
+        content: 'Walking through the old town at dusk. The cobblestones told stories underfoot.',
         date: '2024-07-20',
         branch: 'memory',
       },
       {
         id: 'm2',
         type: 'text',
-        content: 'The smell of monsoon. Petrichor on hot stone. That specific weight in the air before it breaks.',
+        content: 'The smell of rain on warm pavement. That specific weight in the air before it breaks.',
         date: '2025-08-14',
         branch: 'memory',
       },
       {
         id: 'm3',
         type: 'image',
-        content: 'India — the light at 5pm in October.',
+        content: 'Golden hour — the light at 5pm in autumn.',
         date: '2024-10-15',
         branch: 'memory',
       },
       {
         id: 'm4',
         type: 'own_writing',
-        content: 'Sister called. Felt like myself.',
+        content: 'Called an old friend. Felt like myself again.',
         date: '2026-02-03',
         branch: 'memory',
         isOwnWriting: true,
-        person: 'Sister',
       },
       {
         id: 'm5',
         type: 'text',
-        content: 'Cooking at Vipassana. The silence made the food taste different. Presence as an ingredient.',
+        content: 'Cooking in silence. Presence as an ingredient. The meal tasted different.',
         date: '2025-04-08',
         branch: 'memory',
       },
@@ -132,37 +136,35 @@ export const branches: BranchData[] = [
       {
         id: 'b1',
         type: 'bucket',
-        content: 'Surf a barrel.',
+        content: 'Learn to surf.',
         date: '2025-01-01',
         branch: 'becoming',
       },
       {
         id: 'b2',
         type: 'bucket',
-        content: 'Do a backflip.',
+        content: 'Run a half marathon.',
         date: '2025-03-15',
         branch: 'becoming',
       },
       {
         id: 'b3',
         type: 'bucket',
-        content: 'Watch Life is Beautiful — in Italian.',
+        content: 'Watch a classic film in its original language.',
         date: '2025-09-20',
         branch: 'becoming',
-        language: 'Italian',
       },
       {
         id: 'b4',
         type: 'text',
-        content: 'Ciao, mi chiamo Ishita. Sto imparando l\'italiano.',
+        content: 'Started learning a new language today. Small steps count.',
         date: '2026-02-10',
         branch: 'becoming',
-        language: 'Italian',
       },
       {
         id: 'b5',
         type: 'own_writing',
-        content: 'Made a 3-minute documentary on my phone today. It counts.',
+        content: 'Made something with my hands today. It counts.',
         date: '2026-01-22',
         branch: 'becoming',
         isOwnWriting: true,
@@ -179,36 +181,36 @@ export const branches: BranchData[] = [
       {
         id: 'be1',
         type: 'image',
-        content: 'Claude Monet — Impression, Sunrise. 1872. He named an entire movement and didn\'t mean to.',
+        content: 'A painting that stopped me in my tracks at the museum.',
         date: '2025-09-01',
         branch: 'beauty',
       },
       {
         id: 'be2',
         type: 'image',
-        content: 'Winter Olympics — the pairs skating. The way trust becomes movement.',
+        content: 'Two dancers moving in perfect trust. The way connection becomes art.',
         date: '2026-02-10',
         branch: 'beauty',
       },
       {
         id: 'be3',
         type: 'image',
-        content: 'A croissant from the place on Rue de Rivoli. Ordinary things made extraordinary.',
+        content: 'A perfect pastry from the corner bakery. Ordinary things made extraordinary.',
         date: '2024-11-30',
         branch: 'beauty',
       },
       {
         id: 'be4',
         type: 'text',
-        content: 'Beauty is a legitimate life\'s work. Monet proved it. So did whoever baked this.',
+        content: 'Noticing beauty is a skill. The more you practice, the more you see.',
         date: '2025-11-30',
         branch: 'beauty',
       },
     ],
   },
   {
-    id: 'icons',
-    name: 'Icons',
+    id: 'inspiration',
+    name: 'Inspiration',
     color: '#c9a84c',
     attachment: 2.2,
     direction: [-1.5, 2.0, -1.5],
@@ -216,39 +218,37 @@ export const branches: BranchData[] = [
       {
         id: 'i1',
         type: 'text',
-        content: 'Taylor Swift. Faced backlash. Kept making things. Turned the noise into albums.',
+        content: 'Someone who faced doubt and kept creating anyway. That takes courage.',
         date: '2025-10-15',
-        branch: 'icons',
+        branch: 'inspiration',
       },
       {
         id: 'i2',
         type: 'text',
-        content: 'Eileen Gu chose herself. Refused to be just one thing. That\'s the whole lesson.',
+        content: 'Refusing to be defined by a single label. That is the whole lesson.',
         date: '2026-01-10',
-        branch: 'icons',
+        branch: 'inspiration',
       },
       {
         id: 'i3',
         type: 'text',
         content: 'The question is not whether you are capable. The question is whether you will let yourself find out.',
         date: '2025-06-20',
-        branch: 'icons',
-        person: 'Professor Chris Peiche',
+        branch: 'inspiration',
       },
       {
         id: 'i4',
         type: 'text',
         content: 'You are building the plane while flying it. That is the only way anyone has ever built anything.',
         date: '2025-08-05',
-        branch: 'icons',
-        person: 'Sierra Wang',
+        branch: 'inspiration',
       },
       {
         id: 'i5',
         type: 'text',
-        content: 'Simone de Beauvoir refused the life handed to her. Wrote her way to a different one.',
+        content: 'She refused the life handed to her. Wrote her way to a different one.',
         date: '2025-07-12',
-        branch: 'icons',
+        branch: 'inspiration',
       },
     ],
   },
@@ -262,23 +262,22 @@ export const branches: BranchData[] = [
       {
         id: 'bo1',
         type: 'own_writing',
-        content: 'Running with Imogen. 8km. We didn\'t talk for the first 4km and it was perfect.',
+        content: 'Went for a long run with a friend. We didn\'t talk for the first half and it was perfect.',
         date: '2026-02-12',
         branch: 'body',
         isOwnWriting: true,
-        person: 'Imogen Gardiner',
       },
       {
         id: 'bo2',
         type: 'text',
-        content: 'Pilates at 7am. The teacher said: your body already knows. Let it.',
+        content: 'Morning stretch at 7am. The instructor said: your body already knows. Let it.',
         date: '2026-02-18',
         branch: 'body',
       },
       {
         id: 'bo3',
         type: 'bucket',
-        content: 'Do a full split.',
+        content: 'Touch my toes without bending my knees.',
         date: '2025-05-01',
         branch: 'body',
       },
@@ -294,7 +293,7 @@ export const branches: BranchData[] = [
       {
         id: 'al1',
         type: 'own_writing',
-        content: 'Got pulled under a wave today. Held down for what felt like forever. Came up. Paddled back out.',
+        content: 'Jumped into cold water. The shock woke up every nerve. Came up gasping and grinning.',
         date: '2025-12-28',
         branch: 'alive',
         isOwnWriting: true,
@@ -302,7 +301,7 @@ export const branches: BranchData[] = [
       {
         id: 'al2',
         type: 'own_writing',
-        content: 'The cartwheel. Attempted at 23. Looked completely ridiculous. Felt completely alive.',
+        content: 'Tried something ridiculous today. Looked silly. Felt completely alive.',
         date: '2026-01-05',
         branch: 'alive',
         isOwnWriting: true,
@@ -310,7 +309,7 @@ export const branches: BranchData[] = [
       {
         id: 'al3',
         type: 'text',
-        content: 'Falling off a skateboard and feeling the ground — the aliveness of impact, of trying.',
+        content: 'Falling down and feeling the ground — the aliveness of impact, of trying.',
         date: '2025-11-22',
         branch: 'alive',
       },
@@ -326,7 +325,7 @@ export const branches: BranchData[] = [
       {
         id: 'w1',
         type: 'own_writing',
-        content: 'Hard night. Writing this at 2am. I don\'t know what I\'m doing but I know I\'m not done.',
+        content: 'Late night. Writing this at 2am. I don\'t know what I\'m doing but I know I\'m not done.',
         date: '2025-10-03',
         branch: 'words',
         isOwnWriting: true,
@@ -342,7 +341,7 @@ export const branches: BranchData[] = [
       {
         id: 'w3',
         type: 'gift',
-        content: 'A note from the gardener: you\'ve written 12 times this month. The tree is listening.',
+        content: 'A note from the gardener: you\'ve been writing consistently. The tree is listening.',
         date: '2026-02-24',
         branch: 'words',
       },
@@ -358,14 +357,14 @@ export const branches: BranchData[] = [
       {
         id: 'h1',
         type: 'bucket',
-        content: 'Go to France — Lyon. Stay long enough.',
+        content: 'Travel somewhere new. Stay long enough to feel it.',
         date: '2025-05-20',
         branch: 'horizon',
       },
       {
         id: 'h2',
         type: 'bucket',
-        content: 'Learn to sing.',
+        content: 'Learn to play an instrument.',
         date: '2025-08-01',
         branch: 'horizon',
       },
@@ -379,14 +378,14 @@ export const branches: BranchData[] = [
       {
         id: 'h4',
         type: 'text',
-        content: 'The year I take off to ski. It is allowed. Val Thorens. February.',
+        content: 'The year I say yes to the thing I keep postponing. It is allowed.',
         date: '2026-01-15',
         branch: 'horizon',
       },
       {
         id: 'h5',
         type: 'capsule',
-        content: 'Letter to myself — 2031.',
+        content: 'Letter to myself — five years from now.',
         date: '2026-02-24',
         branch: 'horizon',
         isOwnWriting: true,
@@ -405,10 +404,9 @@ export const branches: BranchData[] = [
       {
         id: 'p1',
         type: 'text',
-        content: 'Imogen — the friend you run with and talk to about everything and nothing. She makes the world feel smaller in a good way.',
+        content: 'A friend who shows up without being asked. The kind of person who makes the world feel smaller in a good way.',
         date: '2026-01-30',
         branch: 'people',
-        person: 'Imogen Gardiner',
       },
       {
         id: 'p2',
@@ -416,26 +414,29 @@ export const branches: BranchData[] = [
         content: 'The work is never finished. You just get better at knowing when to stop.',
         date: '2025-05-14',
         branch: 'people',
-        person: 'John Mitchell',
       },
       {
         id: 'p3',
         type: 'own_writing',
-        content: 'My sister. She called when I didn\'t know I needed it. She always does.',
+        content: 'Someone called when I didn\'t know I needed it. They always do.',
         date: '2026-02-03',
         branch: 'people',
         isOwnWriting: true,
-        person: 'Sister',
       },
     ],
   },
 ]
 
+// ---------------------------------------------------------------------------
+// Seed suggestions — generic examples showing how the gardener might propose
+// new features based on a user's patterns.
+// ---------------------------------------------------------------------------
+
 export const seedSuggestions: SuggestionData[] = [
   {
     id: 's1',
-    title: 'Vine mechanic between Love and Horizon',
-    why: 'Love and Horizon have been co-occurring in your logs for months. France keeps appearing near the boy you loved. There should be a visible connection between these branches.',
+    title: 'Vine mechanic between related branches',
+    why: 'Two of your branches have been co-occurring in your logs. There should be a visible connection between them.',
     complexity: 'medium',
     claudePrompt: 'Add a vine/connection mechanic to the Grove 3D tree. When two branches have strong co-occurrence in leaf content (detected via embeddings), render a thin glowing vine between them using TubeGeometry along a CatmullRomCurve3 that arcs between the two branch tips. The vine should pulse slowly and be barely visible — felt more than seen.',
     status: 'pending',
@@ -443,27 +444,31 @@ export const seedSuggestions: SuggestionData[] = [
   {
     id: 's2',
     title: 'Waveform visualization on branch view',
-    why: 'You feed audio constantly but the branch view only shows leaf shapes. The Body and Memory branches should pulse with the rhythm of the music saved there.',
+    why: 'You feed audio often but the branch view only shows leaf shapes. Branches with audio should pulse with the rhythm of the music saved there.',
     complexity: 'small',
     claudePrompt: 'Add ambient waveform bars to branches that contain audio leaves in the Grove 3D tree. When a branch has audio content, render 5-7 thin bar geometries near the branch tip that animate in a slow breathing waveform pattern using sine waves with staggered phase offsets.',
     status: 'pending',
   },
   {
     id: 's3',
-    title: 'Lyon sub-branch under Horizon',
-    why: 'France appears 11+ times across your logs and leaves. Lyon specifically. This deserves its own space inside the Horizon branch.',
+    title: 'Sub-branch for recurring themes',
+    why: 'A recurring theme keeps appearing across your leaves. It deserves its own space as a sub-branch.',
     complexity: 'small',
-    claudePrompt: 'Add sub-branch support to the Grove 3D tree. A sub-branch grows off an existing branch tip rather than off the trunk. Implement the first sub-branch: Lyon, growing from the tip of Horizon, shorter and thinner, in the same gold color but slightly cooler. Populate with 2-3 placeholder leaves about Lyon/France.',
+    claudePrompt: 'Add sub-branch support to the Grove 3D tree. A sub-branch grows off an existing branch tip rather than off the trunk. Implement a sub-branch growing from the tip of a parent branch, shorter and thinner, in the same color but slightly cooler. Populate with 2-3 placeholder leaves.',
     status: 'pending',
   },
 ]
 
+// ---------------------------------------------------------------------------
+// Starter nightly log entries — generic examples.
+// ---------------------------------------------------------------------------
+
 export const nightlyLogs = [
-  { date: '2026-02-24', entry: 'The light through the window at 4pm. Imogen texted.', positive: true },
-  { date: '2026-02-23', entry: 'Finished the Italian lesson. Managed a whole sentence.', positive: true },
+  { date: '2026-02-24', entry: 'The light through the window at 4pm. A friend texted.', positive: true },
+  { date: '2026-02-23', entry: 'Finished a lesson I\'d been putting off. Managed the whole thing.', positive: true },
   { date: '2026-02-22', entry: 'Hard day. Wrote about it anyway.', positive: false },
-  { date: '2026-02-21', entry: 'Pilates. The city at night from the roof.', positive: true },
-  { date: '2026-02-20', entry: 'Sister called.', positive: true },
+  { date: '2026-02-21', entry: 'Moved my body. Watched the city at night from the roof.', positive: true },
+  { date: '2026-02-20', entry: 'An old friend called.', positive: true },
   { date: '2026-02-19', entry: 'Didn\'t go outside. Felt the pull of the screen.', positive: false },
   { date: '2026-02-18', entry: 'Cooked something new. It worked.', positive: true },
 ]
