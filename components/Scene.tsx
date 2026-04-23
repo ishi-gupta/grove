@@ -3,37 +3,64 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
-import { Suspense } from 'react'
+import { Suspense, useMemo } from 'react'
 import Tree3D from './Tree3D'
-import { LeafData } from '@/data/dummy'
+import ConstellationMode from './ConstellationMode'
+import type { BranchData, LeafData } from '@/lib/types'
+import { getSeasonalPalette } from '@/lib/seasons'
 
 interface SceneProps {
+  branches: BranchData[]
+  treeDays: number
   onLeafClick: (leaf: LeafData) => void
   highlightedBranch: string | null
+  viewMode: 'tree' | 'constellation'
 }
 
-export default function Scene({ onLeafClick, highlightedBranch }: SceneProps) {
+export default function Scene({ branches, treeDays, onLeafClick, highlightedBranch, viewMode }: SceneProps) {
+  const palette = useMemo(() => getSeasonalPalette(), [])
+
   return (
     <Canvas
       camera={{ position: [0, 3, 9], fov: 55 }}
       style={{ background: '#0a0a14' }}
       gl={{ antialias: true, alpha: false }}
     >
-      {/* Lighting */}
-      <ambientLight intensity={0.15} color="#1a1535" />
-      <pointLight position={[0, 8, 0]} intensity={0.4} color="#c8b47a" />
-      <pointLight position={[-5, 3, 5]} intensity={0.2} color="#c17f6b" />
-      <pointLight position={[5, 3, -5]} intensity={0.2} color="#4ecdc4" />
+      {/* Seasonal lighting */}
+      <ambientLight intensity={palette.ambientIntensity} color={palette.ambientColor} />
+      <pointLight position={[0, 8, 0]} intensity={palette.topLightIntensity} color={palette.topLight} />
+      <pointLight position={[-5, 3, 5]} intensity={palette.warmLightIntensity} color={palette.warmLight} />
+      <pointLight position={[5, 3, -5]} intensity={palette.coolLightIntensity} color={palette.coolLight} />
 
-      {/* Fog */}
-      <fog attach="fog" args={['#060610', 18, 40]} />
+      {/* Seasonal fog */}
+      <fog attach="fog" args={[palette.fogColor, palette.fogNear, palette.fogFar]} />
 
-      {/* Stars / atmosphere */}
-      <Stars radius={30} depth={20} count={800} factor={1.2} saturation={0} fade speed={0.3} />
+      {/* Stars — more visible in winter, hazy in summer */}
+      <Stars
+        radius={30}
+        depth={20}
+        count={palette.starCount}
+        factor={1.2}
+        saturation={0}
+        fade
+        speed={0.3}
+      />
 
-      {/* The tree */}
+      {/* Tree or Constellation view */}
       <Suspense fallback={null}>
-        <Tree3D onLeafClick={onLeafClick} highlightedBranch={highlightedBranch} />
+        {viewMode === 'tree' ? (
+          <Tree3D
+            branches={branches}
+            treeDays={treeDays}
+            onLeafClick={onLeafClick}
+            highlightedBranch={highlightedBranch}
+          />
+        ) : (
+          <ConstellationMode
+            branches={branches}
+            onLeafClick={onLeafClick}
+          />
+        )}
       </Suspense>
 
       {/* Camera controls */}
@@ -49,10 +76,10 @@ export default function Scene({ onLeafClick, highlightedBranch }: SceneProps) {
         target={[0, 2, 0]}
       />
 
-      {/* Post-processing */}
+      {/* Post-processing — seasonal bloom */}
       <EffectComposer>
         <Bloom
-          intensity={0.8}
+          intensity={palette.bloomIntensity}
           luminanceThreshold={0.2}
           luminanceSmoothing={0.9}
           mipmapBlur

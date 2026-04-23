@@ -2,16 +2,18 @@
 
 import { useMemo } from 'react'
 import * as THREE from 'three'
-import { branches } from '@/data/dummy'
-import { LeafData } from '@/data/dummy'
+import type { BranchData, LeafData } from '@/lib/types'
 import Branch3D from './Branch3D'
+import QuietCounter from './QuietCounter'
 
 interface Tree3DProps {
+  branches: BranchData[]
+  treeDays: number
   onLeafClick: (leaf: LeafData) => void
   highlightedBranch: string | null
 }
 
-export default function Tree3D({ onLeafClick, highlightedBranch }: Tree3DProps) {
+export default function Tree3D({ branches, treeDays, onLeafClick, highlightedBranch }: Tree3DProps) {
   // Trunk geometry — slightly curved upward
   const trunkCurve = useMemo(() => {
     return new THREE.CatmullRomCurve3([
@@ -54,6 +56,9 @@ export default function Tree3D({ onLeafClick, highlightedBranch }: Tree3DProps) 
 
       {/* Root glow */}
       <mesh geometry={rootGeometry} material={rootMaterial} position={[0, -0.1, 0]} />
+
+      {/* Quiet counter — days alive, near the root */}
+      <QuietCounter days={treeDays} />
 
       {/* Branches */}
       {branches.map((branch) => {

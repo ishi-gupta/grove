@@ -1,13 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { TreePine, Plus, Moon, Sprout } from 'lucide-react'
+import { TreePine, Plus, Moon, Sprout, Sparkles } from 'lucide-react'
 
 type AppState = 'explore' | 'feed' | 'log' | 'seed'
 
 interface NavigationProps {
   state: AppState
   onChange: (state: AppState) => void
+  viewMode: 'tree' | 'constellation'
+  onToggleView: () => void
 }
 
 const items = [
@@ -17,7 +19,7 @@ const items = [
   { id: 'seed', icon: Sprout, label: 'seed' },
 ] as const
 
-export default function Navigation({ state, onChange }: NavigationProps) {
+export default function Navigation({ state, onChange, viewMode, onToggleView }: NavigationProps) {
   return (
     <motion.nav
       className="fixed bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1"
@@ -62,6 +64,38 @@ export default function Navigation({ state, onChange }: NavigationProps) {
           </button>
         )
       })}
+      {/* View mode toggle — tree / constellation */}
+      <div
+        style={{
+          width: '1px',
+          height: '20px',
+          background: 'rgba(200, 180, 140, 0.1)',
+          margin: '0 4px',
+        }}
+      />
+      <button
+        onClick={onToggleView}
+        className="relative flex flex-col items-center gap-1 px-4 py-2 rounded-full transition-all"
+        style={{ color: viewMode === 'constellation' ? 'rgba(200, 180, 140, 0.9)' : 'rgba(200, 180, 140, 0.25)' }}
+      >
+        {viewMode === 'constellation' && (
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            layoutId="nav-view"
+            style={{ background: 'rgba(200, 180, 140, 0.08)' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 380 }}
+          />
+        )}
+        <Sparkles size={15} strokeWidth={1.5} />
+        <span style={{
+          fontFamily: 'Inter, sans-serif',
+          fontSize: '9px',
+          fontWeight: 300,
+          letterSpacing: '0.08em',
+        }}>
+          {viewMode === 'tree' ? 'stars' : 'tree'}
+        </span>
+      </button>
     </motion.nav>
   )
 }

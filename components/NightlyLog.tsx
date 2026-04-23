@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
-import { nightlyLogs } from '@/data/dummy'
+import type { NightlyLogData } from '@/lib/types'
 
 interface NightlyLogProps {
   isOpen: boolean
+  logs: NightlyLogData[]
   onClose: () => void
 }
 
-export default function NightlyLog({ isOpen, onClose }: NightlyLogProps) {
+export default function NightlyLog({ isOpen, logs, onClose }: NightlyLogProps) {
   const [entry, setEntry] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -124,7 +125,7 @@ export default function NightlyLog({ isOpen, onClose }: NightlyLogProps) {
 
                   {/* 7 day dots */}
                   <div className="flex gap-2 items-center mb-6">
-                    {nightlyLogs.slice(0, 7).reverse().map((log, i) => (
+                    {logs.slice(0, 7).reverse().map((log, i) => (
                       <div
                         key={i}
                         title={log.date}

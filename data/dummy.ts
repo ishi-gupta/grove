@@ -1,38 +1,6 @@
-export type LeafType = 'text' | 'image' | 'audio' | 'bucket' | 'capsule' | 'gift' | 'own_writing'
-
-export interface LeafData {
-  id: string
-  type: LeafType
-  content: string
-  date: string
-  branch: string
-  person?: string
-  sealed?: boolean
-  sealedUntil?: string
-  isOwnWriting?: boolean
-  isResurfaced?: boolean
-  bucketDone?: boolean
-  language?: string
-}
-
-export interface BranchData {
-  id: string
-  name: string
-  color: string
-  leaves: LeafData[]
-  // 3D position: [startY on trunk, end x, end y offset from start, end z]
-  attachment: number // y position on trunk where branch starts
-  direction: [number, number, number] // x, y, z offset to tip
-}
-
-export interface SuggestionData {
-  id: string
-  title: string
-  why: string
-  complexity: 'small' | 'medium' | 'large'
-  claudePrompt: string
-  status: 'pending' | 'accepted' | 'built' | 'dismissed'
-}
+// Types are now centralized in lib/types.ts — re-exported here for compatibility
+export type { LeafType, LeafData, BranchData, SuggestionData } from '@/lib/types'
+import type { BranchData, SuggestionData } from '@/lib/types'
 
 export const branches: BranchData[] = [
   {
